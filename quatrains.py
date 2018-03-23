@@ -1,10 +1,9 @@
-#! /usr/bin/env python
 #-*- coding:utf-8 -*-
 
 from utils import *
 from corpus import get_all_corpus
 from vocab import get_vocab
-
+from functools import reduce
 
 def is_quatrain(poem):
     if poem['source'] == 'qsc_tab.txt':
@@ -28,10 +27,10 @@ def get_quatrains():
                     if ch not in ch2int:
                         return False
             return True
-    return filter(quatrain_filter, get_all_corpus())
+    return list(filter(quatrain_filter, get_all_corpus()))
 
 
 if __name__ == '__main__':
     quatrains = get_quatrains()
-    print "Size of quatrains: %d" % len(quatrains)
+    print("Size of quatrains: %d" % len(quatrains))
 

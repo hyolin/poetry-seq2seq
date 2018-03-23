@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import os
@@ -15,14 +14,14 @@ _wc_path = os.path.join(DATA_PROCESSED_DIR, 'word_cnts.json')
 def _gen_word_cnts():
     counters = dict()
     segmenter = Segmenter()
-    quatrains = get_quatrains()
+    quatrains = list(get_quatrains())
     for idx, poem in enumerate(quatrains):
         for sentence in poem['sentences']:
             segs = segmenter.segment(sentence)
             for seg in segs:
                 counters[seg] = counters[seg]+1 if seg in counters else 1
         if 0 == (idx+1)%10000:
-            print "[Word Count] %d/%d quatrains has been processed." %(idx+1, len(quatrains))
+            print("[Word Count] %d/%d quatrains has been processed." %(idx+1, len(quatrains)))
     with codecs.open(_wc_path, 'w', 'utf-8') as fout:
         json.dump(counters, fout)
 
@@ -44,7 +43,7 @@ def _min_word_cnt(cnts, poem, segmenter):
 def get_pop_quatrains(num = 100000):
     cnts = get_word_cnts()
     segmenter = Segmenter()
-    quatrains = get_quatrains()
+    quatrains = list(get_quatrains())
     min_word_cnts = [_min_word_cnt(cnts, quatrain, segmenter) \
             for i, quatrain in enumerate(quatrains)]
     indexes = sorted(range(len(quatrains)), key = lambda i: -min_word_cnts[i])

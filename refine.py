@@ -12,20 +12,20 @@ _w2v_with_alignment_model_path = os.path.join(DATA_PROCESSED_DIR, 'word2vec_with
 
 def print_unicode_list(lst):
     msg = repr([x.encode(sys.stdout.encoding) for x in lst]).decode('string-escape')
-    print msg
+    print(msg)
 
 def experiment1():
     model = models.Word2Vec.load(_w2v_model_path)
     model_alignment = models.Word2Vec.load(_w2v_model_path)
     tests = ['一','两','十','七','八','东','南','西','北','红','绿','人','小','玉']
-    print "Experiment on similarity between word2vec with alignment or without alignment"
+    print("Experiment on similarity between word2vec with alignment or without alignment")
     for test in tests:
-        print "==================", test, "=================="
+        print("==================", test, "==================")
         for m, alignment in zip([model, model_alignment], [False, True]):
             if alignment:
-                print "Top similarity from model without alignment:"
+                print("Top similarity from model without alignment:")
             else:
-                print "Top similarity from model with alignment:"
+                print("Top similarity from model with alignment:")
             result = [t[0] for t in m.wv.most_similar(positive=[unicode(test, "utf-8")])]
             print_unicode_list(result)
 

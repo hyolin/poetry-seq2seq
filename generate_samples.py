@@ -36,7 +36,7 @@ def generate_rnn_samples(sampled_poems):
                 input = string.join(poem).strip()
                 keywords = planner.plan(input)
 
-                print 'Predicting poem {}.'.format(poem_idx)
+                print('Predicting poem {}.'.format(poem_idx))
                 lines = predictor.predict(keywords)
 
                 for idx, sentence in enumerate(lines):
@@ -63,18 +63,18 @@ def load_rnn_samples():
 
 def main():
     if os.path.exists(human_samples_path):
-        print 'Poems already sampled, use the same human samples.'
+        print('Poems already sampled, use the same human samples.')
         cleaned_poems = load_human_samples()
     else:
-        print 'Poems not yet sampled, use new human samples.'
+        print('Poems not yet sampled, use new human samples.')
         poems = get_pop_quatrains()
         sampled_poems = sample_poems(poems)
         cleaned_poems = map(lambda poem: poem['sentences'], sampled_poems)
 
-        print 'Generating human samples.'
+        print('Generating human samples.')
         generate_human_samples(cleaned_poems)
 
-    print 'Generating model samples'
+    print('Generating model samples')
     generate_rnn_samples(cleaned_poems)
 
 if __name__ == '__main__':

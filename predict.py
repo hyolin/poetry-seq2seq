@@ -43,13 +43,13 @@ def unicode_to_utf8(d):
 def load_config(FLAGS):
     if FLAGS.model_path is not None:
         checkpoint_path = FLAGS.model_path
-        print 'Model path specified at: {}'.format(checkpoint_path)
+        print('Model path specified at: {}'.format(checkpoint_path))
     elif FLAGS.model_dir is not None:
         checkpoint_path = tf.train.latest_checkpoint(FLAGS.model_dir + '/')
-        print 'Model dir specified, using the latest checkpoint at: {}'.format(checkpoint_path)
+        print('Model dir specified, using the latest checkpoint at: {}'.format(checkpoint_path))
     else:
         checkpoint_path = tf.train.latest_checkpoint('model/')
-        print 'Model path not specified, using the latest checkpoint at: {}'.format(checkpoint_path)
+        print('Model path not specified, using the latest checkpoint at: {}'.format(checkpoint_path))
 
     FLAGS.model_path = checkpoint_path
 
@@ -66,7 +66,7 @@ def load_config(FLAGS):
 
 def load_model(session, model, saver):
     if tf.train.checkpoint_exists(FLAGS.model_path):
-        print 'Reloading model parameters..'
+        print('Reloading model parameters..')
         model.restore(session, saver, FLAGS.model_path)
     else:
         raise ValueError(
@@ -141,7 +141,7 @@ def main(_):
     with Seq2SeqPredictor() as predictor:
         lines = predictor.predict(KEYWORDS)
         for line in lines:
-            print line
+            print(line)
 
 if __name__ == '__main__':
     tf.app.run()

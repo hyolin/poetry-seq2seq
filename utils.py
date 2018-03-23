@@ -1,6 +1,4 @@
-#! /usr/bin/env python
 # -*- coding:utf-8 -*-
-
 import os
 
 VOCAB_SIZE = 6000
@@ -27,7 +25,8 @@ def embed_w2v(embedding, data_set):
 
 
 def apply_one_hot(data_set):
-    applied = [map(lambda x: to_categorical(x, num_classes=VOCAB_SIZE)[0], sample) for sample in data_set]
+    applied = [map(lambda x: to_categorical(x, num_classes=VOCAB_SIZE)[0], 
+        sample) for sample in data_set]
     return applied
 
 
@@ -44,11 +43,11 @@ def pad_to(lst, length, value):
 
 
 def uprint(x):
-    print repr(x).decode('unicode-escape'),
+    print(repr(x).decode('unicode-escape'))
 
 
 def uprintln(x):
-    print repr(x).decode('unicode-escape')
+    print(repr(x).decode('unicode-escape'))
 
 
 def is_CN_char(ch):

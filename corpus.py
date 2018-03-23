@@ -1,11 +1,10 @@
-#! /usr/bin/env python
 #-*- coding:utf-8 -*-
 
 import codecs
 import sys
 import os
 import json
-
+from functools import reduce
 from utils import DATA_PROCESSED_DIR, DATA_RAW_DIR, split_sentences
 from rhyme import RhymeUtil
 
@@ -15,7 +14,7 @@ _corpus_list = ['qts_tab.txt', 'qss_tab.txt', 'qsc_tab.txt', 'qtais_tab.txt',
 
 
 def _parse_corpus(raw_file, json_file):
-    print "Parsing %s ..." %raw_file ,
+    print("Parsing %s ..." %raw_file)
     sys.stdout.flush()
     rdict = RhymeUtil()
     data = []
@@ -51,7 +50,7 @@ def _parse_corpus(raw_file, json_file):
             line = fin.readline().strip()
     with codecs.open(json_file, 'w', 'utf-8') as fout:
         json.dump(data, fout)
-    print "Done (%d poems)" %len(data)
+    print("Done (%d poems)" %len(data))
     return data
 
 
@@ -71,5 +70,5 @@ def get_all_corpus():
 
 if __name__ == '__main__':
     corpus = get_all_corpus()
-    print "Size of the entire corpus: %d" % len(corpus)
+    print("Size of the entire corpus: %d" % len(corpus))
 

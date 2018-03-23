@@ -1,10 +1,9 @@
-#! /usr/bin/env python
 #-*- coding:utf-8 -*-
 
 import codecs
 import os
 import random
-
+from functools import reduce
 import numpy as np
 
 from cnt_words import get_pop_quatrains
@@ -38,7 +37,7 @@ def _gen_train_data():
     poems = get_pop_quatrains()
     random.shuffle(poems)
     ranks = get_word_ranks()
-    print "Generating training data ..."
+    print("Generating training data ...")
     data = []
     kw_data = []
     for idx, poem in enumerate(poems):
@@ -49,7 +48,7 @@ def _gen_train_data():
             kw_row = []
             for sentence in sentences:
                 rows.append([sentence])
-                segs = filter(lambda seg: seg in ranks, segmenter.segment(sentence))
+                segs = list(filter(lambda seg: seg in ranks, segmenter.segment(sentence)))
                 if 0 == len(segs):
                     flag = False
                     break
@@ -60,14 +59,14 @@ def _gen_train_data():
                 data.extend(rows)
                 kw_data.append(kw_row)
         if 0 == (idx+1)%2000:
-            print "[Training Data] %d/%d poems are processed." %(idx+1, len(poems))
+            print("[Training Data] %d/%d poems are processed." %(idx+1, len(poems)))
     with codecs.open(train_path, 'w', 'utf-8') as fout:
         for row in data:
             fout.write('\t'.join(row)+'\n')
     with codecs.open(kw_train_path, 'w', 'utf-8') as fout:
         for kw_row in kw_data:
             fout.write('\t'.join(kw_row)+'\n')
-    print "Training data is generated."
+    print("Training data is generated.")
 
 
 # TODO(vera): find a better name than cangtou...
@@ -79,8 +78,8 @@ def _gen_cangtou_train_data():
             for sentence in poem['sentences']:
                 fout.write(sentence + "\t" + sentence[0] + "\n")
             if 0 == (idx + 1) % 2000:
-                print "[Training Data] %d/%d poems are processed." %(idx+1, len(poems))
-    print "Cangtou training data is generated."
+                print("[Training Data] %d/%d poems are processed." %(idx+1, len(poems)))
+    print("Cangtou training data is generated.")
 
 
 def get_train_data(cangtou=False):
@@ -143,7 +142,7 @@ def batch_train_data(batch_size):
                     batch_s[i%4].append([ch2int[ch] for ch in toks[0]])
                     batch_kw[i%4].append([ch2int[ch] for ch in toks[1]])
             if batch_size != len(batch_s[0]):
-                print 'Batch incomplete with size {}, expecting size {}, dropping batch.'.format(len(batch_s[0]), batch_size)
+                print('Batch incomplete with size {}, expecting size {}, dropping batch.'.format(len(batch_s[0]), batch_size))
                 break
             else:
                 kw_mats = [fill_np_matrix(batch_kw[i], batch_size, VOCAB_SIZE-1) \
@@ -256,9 +255,9 @@ def gen_batch_train_data(batch_size, prev=True, rev=False, align=False, cangtou=
 
 def main():
     train_data = get_train_data()
-    print "Size of the training data: %d" %len(train_data)
+    print("Size of the training data: %d" %len(train_data))
     kw_train_data = get_kw_train_data()
-    print "Size of the keyword training data: %d" %len(kw_train_data)
+    print("Size of the keyword training data: %d" %len(kw_train_data))
     assert len(train_data) == 4 * len(kw_train_data)
 
 

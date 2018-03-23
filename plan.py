@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 #-*- coding:utf-8 -*-
 
 import os
@@ -27,8 +26,8 @@ class Planner:
             self.model = models.Word2Vec.load(_model_path)
 
     def _train(self):
-        print "Start training Word2Vec for planner ..."
-        quatrains = get_quatrains()
+        print("Start training Word2Vec for planner ...")
+        quatrains = list(get_quatrains())
         segmenter = Segmenter()
         seg_lists = []
         for idx, quatrain in enumerate(quatrains):
@@ -38,8 +37,8 @@ class Planner:
                         segmenter.segment(sentence)))
             seg_lists.append(seg_list)
             if 0 == (idx+1)%10000:
-                print "[Plan Word2Vec] %d/%d quatrains has been processed." %(idx+1, len(quatrains))
-        print "Hold on. This may take some time ..."
+                print("[Plan Word2Vec] %d/%d quatrains has been processed." %(idx+1, len(quatrains)))
+        print("Hold on. This may take some time ...")
         self.model = models.Word2Vec(seg_lists, size = 512, min_count = 5)
         self.model.save(_model_path)
 
@@ -83,10 +82,10 @@ if __name__ == '__main__':
     for row in kw_train_data:
         num = randint(1,3)
         uprint(row[1:])
-        print "num = %d" %num
+        print("num = %d" %num)
         guess = row[1:num+1]
         planner.expand(guess, 4)
         uprintln(guess)
         assert len(guess) == 4
-        print
+        print()
 
