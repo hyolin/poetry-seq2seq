@@ -165,9 +165,8 @@ def train():
                     checkpoint_path = os.path.join(FLAGS.model_dir, FLAGS.model_name)
                     model.save(sess, saver, checkpoint_path, global_step=model.global_step)
                     model_config_path = "{}-{}.json".format(checkpoint_path, model.global_step.eval())
-                    json.dump(model.config,
-                              open(model_config_path, 'w', encoding='utf-8'),
-                              indent=2)
+                    with open(model_config_path, 'w', encoding='utf-8') as f:
+                        json.dump(model.config, f, indent=2)
 
             # Increase the epoch index of the model
             model.increment_global_epoch_step_op.eval()
@@ -177,11 +176,8 @@ def train():
         print('Saving the last model')
         checkpoint_path = os.path.join(FLAGS.model_dir, FLAGS.model_name)
         model.save(sess, saver, checkpoint_path, global_step=model.global_step)
-        with open('{}-{}'.format(checkpoint_path, model.global_step.eval()), 'wb') as f:
+        with open('{}-{}'.format(checkpoint_path, model.global_step.eval()), 'w', encoding='utf-8') as f:
             json.dump(model.config, f, indent=2)
-        json.dump(model.config,
-                  open('%s-%d.json' % (checkpoint_path, model.global_step.eval()), 'wb'),
-                  indent=2)
 
     print('Training terminated')
 

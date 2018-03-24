@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # coding: utf-8
 
 
@@ -33,7 +32,7 @@ tf.app.flags.DEFINE_boolean('log_device_placement', False, 'Log placement of ops
 
 
 FLAGS = tf.app.flags.FLAGS
-
+config = {str(k): v.value for k, v in FLAGS.__flags.items()}
 
 #json loads strings as unicode; we currently still work with Python 2 strings, and need conversion
 def unicode_to_utf8(d):
@@ -54,12 +53,12 @@ def load_config(FLAGS):
     FLAGS.model_path = checkpoint_path
 
     # Load config saved with model
-    config_unicode = json.load(open('%s.json' % FLAGS.model_path, 'rb'))
-    config = unicode_to_utf8(config_unicode)
+    config = json.load(open('%s.json' % FLAGS.model_path, 'r', encoding='utf-8'))
+    #config = unicode_to_utf8(config_unicode)
 
     # Overwrite flags
     for key, value in FLAGS.__flags.items():
-        config[key] = value
+        config[key] = value.value
 
     return config
 
@@ -78,7 +77,7 @@ class Seq2SeqPredictor:
     def __init__(self):
         # Load model config
         config = load_config(FLAGS)
-
+        print(config)
         config_proto = tf.ConfigProto(
             allow_soft_placement=FLAGS.allow_soft_placement,
             log_device_placement=FLAGS.log_device_placement,

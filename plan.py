@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 
 import os
-
+from functools import reduce, cmp_to_key
 import jieba
 from gensim import models
 from random import shuffle, random, randint
@@ -43,7 +43,7 @@ class Planner:
         self.model.save(_model_path)
 
     def expand(self, words, num):
-        positive = filter(lambda w: w in self.model.wv, words)
+        positive = list(filter(lambda w: w in self.model.wv, words))
         similars = self.model.wv.most_similar(positive = positive) \
                 if len(positive) > 0 else []
         words.extend(pair[0] for pair in similars[:min(len(similars), num-len(words))])
@@ -61,12 +61,15 @@ class Planner:
                     else:
                         prob_sum -= 1./(rank+1)
         shuffle(words)
+    
+    def cmp(self, x, y):
+        return (self.ranks[x] > self.ranks[y]) - (self.ranks[x] < self.ranks[y])
 
     def plan(self, text):
         def extract(sentence):
-            return filter(lambda x: x in self.ranks, jieba.lcut(sentence))
-        keywords = sorted(reduce(lambda x,y:x+y, map(extract, split_sentences(text)), []),
-            cmp = lambda x,y: cmp(self.ranks[x], self.ranks[y]))
+            return list(filter(lambda x: x in self.ranks, jieba.lcut(sentence)))
+        txts = reduce(lambda x, y: x + y, map(extract, split_sentences(text)))
+        keywords = sorted(txts, key=cmp_to_key(self.cmp))
         words = [keywords[idx] for idx in \
                 filter(lambda i: 0 == i or keywords[i] != keywords[i-1], range(len(keywords)))]
         if len(words) < 4:
@@ -76,16 +79,21 @@ class Planner:
                 words.pop()
         return words
 
-if __name__ == '__main__':
+def test():
     planner = Planner()
     kw_train_data = get_kw_train_data()
     for row in kw_train_data:
         num = randint(1,3)
-        uprint(row[1:])
+        print(row[1:])
         print("num = %d" %num)
         guess = row[1:num+1]
-        planner.expand(guess, 4)
-        uprintln(guess)
+        v = planner.expand(guess, 4)
+        print(guess)
         assert len(guess) == 4
-        print()
+        print(v)
 
+if __name__ == '__main__':
+    planner = Planner()
+    planner.plan("床前明月光")
+    
+    

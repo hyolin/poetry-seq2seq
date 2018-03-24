@@ -7,12 +7,10 @@ import sys
 import tensorflow as tf
 tf.app.flags.DEFINE_boolean('cangtou', False, 'Generate Acrostic Poem')
 
-reload(sys)
-sys.setdefaultencoding('utf8')
 
-def get_cangtou_keywords(input):
-    assert(len(input) == 4)
-    return [c for c in input]
+def get_cangtou_keywords(ipt):
+    assert(len(ipt) == 4)
+    return [c for c in ipt]
 
 def main(cangtou=False):
     planner = Planner()
@@ -21,18 +19,18 @@ def main(cangtou=False):
         terminate = False
         while not terminate:
             try:
-                input = raw_input('Input Text:\n').decode('utf-8').strip()
+                ipt = input('ipt Text:\n').strip()
 
-                if not input:
-                    print('Input cannot be empty!')
-                elif input.lower() in ['quit', 'exit']:
+                if not ipt:
+                    print('ipt cannot be empty!')
+                elif ipt.lower() in ['quit', 'exit']:
                     terminate = True
                 else:
                     if cangtou:
-                        keywords = get_cangtou_keywords(input)
+                        keywords = get_cangtou_keywords(ipt)
                     else:
                         # Generate keywords
-                        keywords = planner.plan(input)
+                        keywords = planner.plan(ipt)
 
                     # Generate poem
                     lines = predictor.predict(keywords)
