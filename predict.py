@@ -77,13 +77,12 @@ class Seq2SeqPredictor:
     def __init__(self):
         # Load model config
         config = load_config(FLAGS)
-        print(config)
         config_proto = tf.ConfigProto(
             allow_soft_placement=FLAGS.allow_soft_placement,
             log_device_placement=FLAGS.log_device_placement,
             gpu_options=tf.GPUOptions(allow_growth=True)
         )
-
+        print("config_proto: {}".format(config_proto))
         self.sess = tf.Session(config=config_proto)
 
         # Build the model
@@ -127,6 +126,11 @@ class Seq2SeqPredictor:
 
             sentences.append(predicted_sentence)
         return sentences
+
+
+
+class PoetryServer(object):
+    pass
 
 
 def main(_):

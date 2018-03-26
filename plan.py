@@ -23,6 +23,8 @@ class Planner:
         if not os.path.exists(_model_path):
             self._train()
         else:
+            import pdb
+            pdb.set_trace()
             self.model = models.Word2Vec.load(_model_path)
 
     def _train(self):
